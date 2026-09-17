@@ -14,7 +14,7 @@ load_dotenv(dotenv_path=env_path)
 # Get DATABASE_URL and validate
 database_url = os.getenv('DATABASE_URL')
 if not database_url:
-    raise ValueError('DATABASE_URL is not set in .env file!')
+    raise ValueError('DATABASE_URL is not set!')
 
 # Debug print
 safe_url = database_url.split('@')[1] if '@' in database_url else database_url
@@ -34,13 +34,19 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'skillbridge-secret-key')
 
 db = SQLAlchemy(app)
 
+# ============ CORS ============
+# Allow local dev + production frontend on Render
 CORS(app, origins=[
     'http://localhost:3000',
     'http://localhost:5173',
     'http://localhost:5174',
     'http://localhost:5175',
-    'https://your-frontend.onrender.com'
+    'https://skillbridge-frontend.onrender.com',
+    'https://skillbridge-frontend-4n6f.onrender.com',
 ])
+
+# Also allow any *.onrender.com subdomain (for future URL changes)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # ============ MODELS ============
 

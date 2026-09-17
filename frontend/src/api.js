@@ -1,5 +1,5 @@
 ﻿// API Configuration
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = 'https://skillbridge-backend-4n6f.onrender.com/api';
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -22,37 +22,37 @@ async function request(path, options = {}) {
 
 export const api = {
   health: () => request('/health'),
-  
+
   register: (body) => request('/auth/register', {
     method: 'POST',
     body: JSON.stringify(body)
   }),
-  
+
   login: (body) => request('/auth/login', {
     method: 'POST',
     body: JSON.stringify(body)
   }),
-  
+
   questions: (skill) => request(`/assessments/${encodeURIComponent(skill)}`),
-  
+
   roadmap: (role) => request(`/roadmaps?role=${encodeURIComponent(role)}`),
-  
+
   submitAssessment: (body) => request('/assessments/submit', {
     method: 'POST',
     body: JSON.stringify(body)
   }),
-  
+
   latestAssessment: (userId, skill) => request(`/assessments/latest?userId=${userId}&skill=${encodeURIComponent(skill)}`),
-  
+
   progress: (userId) => request(`/progress/${userId}`),
-  
+
   updateProgress: (userId, skill, topic, percent) => request('/progress', {
     method: 'PUT',
     body: JSON.stringify({ userId, skill, topic, percent })
   }),
-  
+
   skills: () => request('/skills'),
-  
+
   createSkill: (body) => request('/skills', {
     method: 'POST',
     body: JSON.stringify(body)
