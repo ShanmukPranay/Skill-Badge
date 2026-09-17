@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 const peersByRole = {
   "Java Full Stack Developer": [
@@ -46,18 +47,42 @@ export default function Peers() {
   const targetRole = location.state?.targetRole || "Java Full Stack Developer";
   const peers = peersByRole[targetRole] || Object.values(peersByRole).flat();
 
-  const filteredPeers = useMemo(() => peers.filter((peer) => `${peer.name} ${peer.skills}`.toLowerCase().includes(search.toLowerCase())), [peers, search]);
+  const filteredPeers = useMemo(
+    () =>
+      peers.filter((peer) =>
+        `${peer.name} ${peer.skills}`.toLowerCase().includes(search.toLowerCase())
+      ),
+    [peers, search]
+  );
 
   return (
     <div className="peers-page">
       <div className="peers-container">
+        <div style={{ marginBottom: 16 }}>
+          <BackButton to="/learning-choice" />
+        </div>
+
         <span className="section-label">PEER LEARNING</span>
         <h1>Find a Skill Partner</h1>
-        <p>Connect with peers who already know the skills you want to learn for <strong>{targetRole}</strong>.</p>
+        <p>
+          Connect with peers who already know the skills you want to learn for{" "}
+          <strong>{targetRole}</strong>.
+        </p>
 
         <div className="peers-toolbar">
-          <input className="search-input" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name or skill..." />
-          <button className="primary-btn" type="button" onClick={() => navigate("/teach", { state: location.state })}>Teach a Skill +</button>
+          <input
+            className="search-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by name or skill..."
+          />
+          <button
+            className="primary-btn"
+            type="button"
+            onClick={() => navigate("/teach", { state: location.state })}
+          >
+            Teach a Skill +
+          </button>
         </div>
 
         <div className="peer-grid">
@@ -67,8 +92,19 @@ export default function Peers() {
               <h3>{peer.name}</h3>
               <p className="peer-skills">{peer.skills}</p>
               <p>{peer.level}</p>
-              <div className="peer-meta"><span>⭐ {peer.rating}</span><span>{peer.sessions} sessions</span></div>
-              <button className="primary-btn" type="button" onClick={() => navigate(`/peers/${peer.id}`, { state: { ...location.state, peer } })}>View Profile →</button>
+              <div className="peer-meta">
+                <span>⭐ {peer.rating}</span>
+                <span>{peer.sessions} sessions</span>
+              </div>
+              <button
+                className="primary-btn"
+                type="button"
+                onClick={() =>
+                  navigate(`/peers/${peer.id}`, { state: { ...location.state, peer } })
+                }
+              >
+                View Profile →
+              </button>
             </div>
           ))}
         </div>

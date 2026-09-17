@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 const roles = [
   "Java Full Stack Developer",
@@ -71,6 +72,10 @@ export default function TeachSession() {
 
   return (
     <main className="page-shell">
+      <div style={{ marginBottom: 16 }}>
+        <BackButton to="/peers" />
+      </div>
+
       <div className="page-head">
         <span className="eyebrow">PEER LEARNING</span>
         <h1>Teach a Skill</h1>
@@ -134,7 +139,20 @@ export default function TeachSession() {
             <textarea rows="4" value={form.description} onChange={(e) => change("description", e.target.value)} placeholder="Tell learners what they will learn in this session." />
           </label>
 
-          <button className="primary-btn" type="submit">Create Teaching Session →</button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 16,
+              marginTop: 16
+            }}
+          >
+            <BackButton to="/peers" />
+            <button className="primary-btn" type="submit">
+              Create Teaching Session →
+            </button>
+          </div>
         </form>
       </section>
 
@@ -161,7 +179,13 @@ export default function TeachSession() {
         )}
 
         <div className="button-row">
-          <button className="secondary-btn" onClick={() => navigate("/peers", { state: location.state })}>Back to Peer Learning</button>
+          <BackButton to="/peers" />
+          <button
+            className="secondary-btn"
+            onClick={() => navigate("/peers", { state: location.state })}
+          >
+            Back to Peer Learning
+          </button>
         </div>
       </section>
     </main>

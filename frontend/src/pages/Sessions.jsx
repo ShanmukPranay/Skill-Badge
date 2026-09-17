@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 export default function Sessions() {
   const navigate = useNavigate();
@@ -16,6 +17,10 @@ export default function Sessions() {
   return (
     <div className="sessions-page">
       <div className="sessions-container">
+        <div style={{ marginBottom: 16 }}>
+          <BackButton to="/peers" />
+        </div>
+
         <span className="section-label">MY LEARNING</span>
 
         <h1>My Sessions</h1>
@@ -29,12 +34,23 @@ export default function Sessions() {
             <h3>No sessions yet</h3>
             <p>Find a peer and book your first learning session.</p>
 
-            <button
-              className="primary-btn"
-              onClick={() => navigate("/peers")}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 16,
+                marginTop: 16
+              }}
             >
-              Find a Peer →
-            </button>
+              <BackButton to="/peers" />
+              <button
+                className="primary-btn"
+                onClick={() => navigate("/peers")}
+              >
+                Find a Peer →
+              </button>
+            </div>
           </div>
         ) : (
           sessions.map((session) => (
@@ -64,6 +80,12 @@ export default function Sessions() {
               </div>
             </div>
           ))
+        )}
+
+        {sessions.length > 0 && (
+          <div style={{ marginTop: 24, display: "flex", justifyContent: "flex-start" }}>
+            <BackButton to="/peers" />
+          </div>
         )}
       </div>
     </div>

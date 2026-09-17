@@ -1,4 +1,5 @@
-import { useLocation, useNavigate } from "react-router-dom";
+﻿import { useLocation, useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 export default function LearningChoice() {
   const location = useLocation();
@@ -7,6 +8,10 @@ export default function LearningChoice() {
   return (
     <div className="choice-page">
       <div className="choice-container">
+        <div style={{ marginBottom: 20 }}>
+          <BackButton />
+        </div>
+
         <div className="choice-header">
           <span className="section-label">BRIDGE YOUR SKILL GAP</span>
           <h1>How do you want to improve?</h1>

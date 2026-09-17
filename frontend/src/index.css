@@ -16,3 +16,435 @@ textarea,
 select {
   font-family: inherit;
 }
+/* ============ App Header ============ */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.app-header-brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+  text-decoration: none;
+}
+
+.app-header-brand span {
+  color: #4f46e5;
+}
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-header-user {
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.app-logout-btn {
+  padding: 8px 18px;
+  background: #ffffff;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.app-logout-btn:hover {
+  background: #dc3545;
+  color: #ffffff;
+}
+
+/* ============ Logout Confirmation Modal ============ */
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.logout-modal {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 28px 32px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: popIn 0.15s ease-out;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.logout-modal h2 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  color: #111;
+}
+
+.logout-modal p {
+  margin: 0 0 24px 0;
+  color: #666;
+  font-size: 15px;
+}
+
+.logout-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.logout-cancel,
+.logout-confirm {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+
+.logout-cancel {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.logout-cancel:hover {
+  background: #e0e0e0;
+}
+
+.logout-confirm {
+  background: #dc3545;
+  color: #ffffff;
+}
+
+.logout-confirm:hover {
+  background: #c82333;
+}
+
+/* ============ Onboarding Page ============ */
+.onboarding-page {
+  max-width: 860px;
+  margin: 40px auto;
+  padding: 0 24px 80px;
+}
+
+.step-label {
+  color: #4f46e5;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+
+.onboarding-page h1 {
+  font-size: 36px;
+  font-weight: 800;
+  color: #111;
+  margin: 12px 0 8px;
+}
+
+.onboarding-page > p {
+  color: #666;
+  font-size: 16px;
+  margin: 0 0 32px;
+}
+
+.onboarding-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+}
+
+.onboarding-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 16px;
+}
+
+.onboarding-card select,
+.skills-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #111;
+  background: #fff;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.onboarding-card select:focus,
+.skills-textarea:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.skills-textarea {
+  margin-top: 16px;
+  min-height: 90px;
+  resize: vertical;
+}
+
+.input-error {
+  border-color: #dc3545 !important;
+}
+
+.field-error {
+  display: block;
+  color: #dc3545;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 8px;
+}
+
+/* Experience / input options */
+.experience-options,
+.input-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.option-card {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: #fff;
+}
+
+.option-card:hover {
+  border-color: #a5b4fc;
+  background: #fafaff;
+}
+
+.option-card.selected {
+  border-color: #4f46e5;
+  background: #f5f3ff;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.option-icon {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.option-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 4px;
+}
+
+.option-card p {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Primary button */
+.primary-btn {
+  display: inline-block;
+  padding: 12px 28px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+
+.primary-btn:hover:not(:disabled) {
+  background: #4338ca;
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============ Error Banner (replaces browser popup) ============ */
+.error-banner {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-left: 4px solid #dc3545;
+}
+
+/* ============ App Header (existing) ============ */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-header-brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+  text-decoration: none;
+}
+
+.app-header-brand span {
+  color: #4f46e5;
+}
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-header-user {
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.app-logout-btn {
+  padding: 8px 18px;
+  background: #ffffff;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.app-logout-btn:hover {
+  background: #dc3545;
+  color: #ffffff;
+}
+
+/* ============ Logout Modal — Clean Redesign ============ */
+.logout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.logout-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+  animation: popIn 0.18s ease-out;
+  text-align: center;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.logout-modal h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}
+
+.logout-modal p {
+  margin: 0 0 28px;
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.logout-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.logout-cancel,
+.logout-confirm {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+
+.logout-cancel {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.logout-cancel:hover {
+  background: #e5e7eb;
+}
+
+.logout-confirm {
+  background: #dc3545;
+  color: #ffffff;
+}
+
+.logout-confirm:hover {
+  background: #b91c1c;
+}

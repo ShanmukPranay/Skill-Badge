@@ -1,5 +1,6 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 const peerNames = {
   rahul: "Rahul Kumar",
@@ -112,9 +113,20 @@ export default function BookSession() {
             placeholder="Example: I want to learn Docker basics and deployment."
           />
 
-          <button className="primary-btn" type="submit">
-            Request Session →
-          </button>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 16,
+              marginTop: 24
+            }}
+          >
+            <BackButton to={`/peers/${peerId}`} />
+            <button className="primary-btn" type="submit">
+              Request Session →
+            </button>
+          </div>
         </form>
       </div>
     </div>

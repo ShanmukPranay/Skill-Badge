@@ -1,4 +1,5 @@
-import { useLocation, useNavigate } from "react-router-dom";
+﻿import { useLocation, useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 export default function SkillAnalysis() {
   const location = useLocation();
@@ -7,6 +8,10 @@ export default function SkillAnalysis() {
 
   return (
     <div className="analysis-page">
+      <div style={{ maxWidth: 700, margin: "0 auto 16px", padding: "0 16px" }}>
+        <BackButton to="/onboarding" />
+      </div>
+
       <div className="analysis-card">
         <div className="analysis-spinner">✨</div>
 
@@ -29,13 +34,24 @@ export default function SkillAnalysis() {
           <p>✓ Preparing your skill gap</p>
         </div>
 
-        <button
-          className="primary-btn"
-          type="button"
-          onClick={() => navigate("/skill-gap", { state: data })}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 16,
+            marginTop: 24
+          }}
         >
-          View My Skill Gap
-        </button>
+          <BackButton to="/onboarding" />
+          <button
+            className="primary-btn"
+            type="button"
+            onClick={() => navigate("/skill-gap", { state: data })}
+          >
+            View My Skill Gap
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
-import { useLocation, useNavigate } from "react-router-dom";
+﻿import { useLocation, useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 const roleRequirements = {
   "Java Full Stack Developer": [
@@ -145,6 +146,10 @@ export default function SkillGap() {
   return (
     <div className="gap-page">
       <div className="gap-container">
+        <div style={{ marginBottom: 16 }}>
+          <BackButton to="/skill-analysis" />
+        </div>
+
         <div className="gap-header">
           <span className="section-label">SKILL ANALYSIS COMPLETE</span>
 
@@ -194,17 +199,28 @@ export default function SkillGap() {
           <h2>Your next step is up to you.</h2>
           <p>Choose how you want to bridge your skill gap.</p>
 
-          <button
-            className="primary-btn"
-            type="button"
-            onClick={() =>
-              navigate("/learning-choice", {
-                state: data
-              })
-            }
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 16,
+              marginTop: 16
+            }}
           >
-            Choose My Learning Path →
-          </button>
+            <BackButton to="/skill-analysis" />
+            <button
+              className="primary-btn"
+              type="button"
+              onClick={() =>
+                navigate("/learning-choice", {
+                  state: data
+                })
+              }
+            >
+              Choose My Learning Path →
+            </button>
+          </div>
         </div>
       </div>
     </div>

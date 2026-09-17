@@ -1,4 +1,5 @@
 ﻿import os
+from pathlib import Path
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -6,16 +7,26 @@ import bcrypt
 from datetime import datetime
 from dotenv import load_dotenv
 
-load_dotenv()
+# Force-load .env from same directory as app.py
+env_path = Path(__file__).parent / '.env'
+load_dotenv(dotenv_path=env_path)
+
+# Get DATABASE_URL and validate
+database_url = os.getenv('DATABASE_URL')
+if not database_url:
+    raise ValueError('DATABASE_URL is not set in .env file!')
+
+# Debug print
+safe_url = database_url.split('@')[1] if '@' in database_url else database_url
+user_part = database_url.split('://')[1].split(':')[0] if '://' in database_url else '?'
+print(f'[DEBUG] DB user: {user_part}')
+print(f'[DEBUG] DB host: {safe_url}')
 
 app = Flask(__name__)
-
-# Database configuration for Supabase using pg8000
-# Use postgresql+pg8000:// instead of postgresql://
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql+pg8000://postgres:password@localhost:5432/postgres')
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    'pool_size': 10,
+    'pool_size': 5,
     'pool_recycle': 3600,
     'pool_pre_ping': True,
 }
@@ -23,11 +34,11 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'skillbridge-secret-key')
 
 db = SQLAlchemy(app)
 
-# CORS configuration
 CORS(app, origins=[
     'http://localhost:3000',
     'http://localhost:5173',
     'http://localhost:5174',
+    'http://localhost:5175',
     'https://your-frontend.onrender.com'
 ])
 
@@ -59,11 +70,7 @@ class Skill(db.Model):
     category = db.Column(db.String(100), nullable=False)
 
     def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'category': self.category
-        }
+        return {'id': self.id, 'name': self.name, 'category': self.category}
 
 class AssessmentQuestion(db.Model):
     __tablename__ = 'assessment_questions'
@@ -117,59 +124,47 @@ def health():
 @app.route('/api/auth/register', methods=['POST'])
 def register():
     data = request.json
-    
     if not data.get('name') or not data.get('email') or not data.get('password'):
         return jsonify({'message': 'Name, email and password are required'}), 400
-    
+
     existing = User.query.filter_by(email=data['email']).first()
     if existing:
         return jsonify({'message': 'Email already registered'}), 400
-    
+
     hashed = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
-    
-    user = User(
-        name=data['name'],
-        email=data['email'],
-        password=hashed.decode('utf-8')
-    )
-    
+    user = User(name=data['name'], email=data['email'], password=hashed.decode('utf-8'))
     db.session.add(user)
     db.session.commit()
-    
     return jsonify(user.to_dict()), 200
 
 @app.route('/api/auth/login', methods=['POST'])
 def login():
     data = request.json
-    
     if not data.get('email') or not data.get('password'):
         return jsonify({'message': 'Email and password are required'}), 400
-    
+
     user = User.query.filter_by(email=data['email']).first()
     if not user:
         return jsonify({'message': 'Invalid credentials'}), 401
-    
+
     if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
         return jsonify({'message': 'Invalid credentials'}), 401
-    
+
     return jsonify(user.to_dict()), 200
 
 @app.route('/api/skills', methods=['GET'])
 def get_skills():
     skills = Skill.query.all()
-    return jsonify([skill.to_dict() for skill in skills])
+    return jsonify([s.to_dict() for s in skills])
 
 @app.route('/api/skills', methods=['POST'])
 def create_skill():
     data = request.json
-    
     if not data.get('name') or not data.get('category'):
         return jsonify({'message': 'Name and category are required'}), 400
-    
     skill = Skill(name=data['name'], category=data['category'])
     db.session.add(skill)
     db.session.commit()
-    
     return jsonify(skill.to_dict()), 201
 
 @app.route('/api/assessments/<skill>', methods=['GET'])
@@ -183,12 +178,11 @@ def submit_assessment():
     user_id = data.get('userId')
     skill = data.get('skill')
     answers = data.get('answers', {})
-    
+
     questions = AssessmentQuestion.query.filter_by(skill=skill).all()
-    
     score = 0
     weak_areas = []
-    
+
     for q in questions:
         answer = answers.get(str(q.id))
         if answer is not None and answer == q.correct_index:
@@ -196,45 +190,32 @@ def submit_assessment():
         else:
             if q.topic not in weak_areas:
                 weak_areas.append(q.topic)
-    
+
     total = len(questions)
     readiness = int(round(score * 100.0 / total)) if total > 0 else 0
-    
     if readiness >= 80:
         level = 'Advanced'
     elif readiness >= 40:
         level = 'Intermediate'
     else:
         level = 'Beginner'
-    
+
     result = AssessmentResult(
-        user_id=user_id,
-        skill=skill,
-        score=score,
-        total=total,
-        readiness=readiness,
-        level=level,
-        weak_areas=', '.join(weak_areas)
+        user_id=user_id, skill=skill, score=score, total=total,
+        readiness=readiness, level=level, weak_areas=', '.join(weak_areas)
     )
-    
     db.session.add(result)
     db.session.commit()
-    
     return jsonify(result.to_dict()), 200
 
 @app.route('/api/assessments/latest', methods=['GET'])
 def get_latest_assessment():
     user_id = request.args.get('userId', type=int)
     skill = request.args.get('skill')
-    
     if not user_id or not skill:
         return jsonify({'message': 'userId and skill are required'}), 400
-    
-    result = AssessmentResult.query.filter_by(
-        user_id=user_id,
-        skill=skill
-    ).order_by(AssessmentResult.assessed_at.desc()).first()
-    
+    result = AssessmentResult.query.filter_by(user_id=user_id, skill=skill)\
+        .order_by(AssessmentResult.assessed_at.desc()).first()
     return jsonify(result.to_dict() if result else None), 200
 
 @app.route('/api/assessments/history/<int:user_id>', methods=['GET'])
@@ -246,7 +227,6 @@ def get_history(user_id):
 @app.route('/api/roadmaps', methods=['GET'])
 def get_roadmap():
     role = request.args.get('role', 'Java Full Stack Developer')
-    
     roadmaps = {
         "Java Full Stack Developer": {
             "Java": ["Syntax & Data Types", "OOP", "Collections", "Exception Handling", "Java 8+", "Multithreading"],
@@ -286,14 +266,12 @@ def get_roadmap():
             "Power BI": ["Data Import", "Data Model", "DAX Basics", "Visuals", "Dashboards"]
         }
     }
-    
     return jsonify(roadmaps.get(role, roadmaps["Java Full Stack Developer"])), 200
 
 @app.route('/api/progress/<int:user_id>', methods=['GET'])
 def get_progress(user_id):
     results = AssessmentResult.query.filter_by(user_id=user_id)\
         .order_by(AssessmentResult.assessed_at.desc()).all()
-    
     progress_data = {}
     for r in results:
         if r.skill not in progress_data:
@@ -310,10 +288,14 @@ def get_progress(user_id):
             'level': r.level,
             'date': r.assessed_at.isoformat() if r.assessed_at else None
         })
-    
     return jsonify(list(progress_data.values())), 200
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+            print('[OK] Database tables ready')
+        except Exception as e:
+            print(f'[ERROR] DB init failed: {e}')
+            raise
     app.run(debug=True, host='0.0.0.0', port=8080)

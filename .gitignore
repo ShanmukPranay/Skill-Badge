@@ -1,10 +1,33 @@
-backend/target/
-backend/.mvn/wrapper/maven-wrapper.jar
-frontend/node_modules/
-frontend/dist/
+﻿# ---------- Python ----------
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 .env
+.env.*
+
+# ---------- Node ----------
+node_modules/
+dist/
+.vite/
+package-lock.json
+
+# ---------- Java (old backend) ----------
+target/
+*.jar
+.mvn/
+maven-wrapper.jar
+
+# ---------- Logs ----------
 *.log
-frontend/node_modules/
-frontend/dist/
-backend/.maven/
-backend/target/
+npm-debug.log*
+
+# ---------- IDE ----------
+.vscode/
+.idea/
+*.swp
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db

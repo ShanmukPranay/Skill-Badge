@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { api, getSessionUser } from "../api";
+import BackButton from "../components/BackButton";
 
 const LESSON_LIBRARY = {
   "Syntax & Data Types": {
@@ -110,63 +111,22 @@ const QUESTION_TEMPLATES = {
   ]
 };
 
-
 function buildFifteenQuestions(skill, topic, existingQuestions = []) {
   const source = existingQuestions.length ? existingQuestions : QUESTION_TEMPLATES.fallback(skill, topic);
   const questions = source.map((q) => ({ ...q }));
 
   const generated = [
-    {
-      question: `What is the main purpose of ${topic}?`,
-      options: [`To understand and apply its core concepts`, "To remove all application logic", "To replace every other technology", "To avoid writing code"],
-      answer: 0,
-    },
-    {
-      question: `Which approach is best when learning ${topic}?`,
-      options: ["Learn the concept, study examples, and practice", "Memorize without practice", "Skip fundamentals", "Only watch videos without trying examples"],
-      answer: 0,
-    },
-    {
-      question: `Where is ${topic} most useful in a ${skill} project?`,
-      options: ["In the part of the application where the concept solves a real requirement", "Only in the README", "Only after deleting the source code", "Nowhere in a real project"],
-      answer: 0,
-    },
-    {
-      question: `Which habit improves your problem-solving ability in ${topic}?`,
-      options: ["Build small examples and analyse mistakes", "Avoid testing", "Copy every solution without understanding", "Never review errors"],
-      answer: 0,
-    },
-    {
-      question: `Before using an advanced feature of ${topic}, what should you know?`,
-      options: ["The basic syntax, purpose, and common use cases", "Only the feature name", "Nothing at all", "Only deployment commands"],
-      answer: 0,
-    },
-    {
-      question: `What is a good way to check whether you understood ${topic}?`,
-      options: ["Explain it, write a small example, and solve a problem", "Read the title once", "Skip all exercises", "Depend only on memorisation"],
-      answer: 0,
-    },
-    {
-      question: `When debugging a problem related to ${topic}, what is a sensible first step?`,
-      options: ["Reproduce the issue and inspect the relevant input, code, or output", "Randomly change many files", "Delete the project", "Ignore the error"],
-      answer: 0,
-    },
-    {
-      question: `Which result shows practical learning of ${topic}?`,
-      options: ["You can use the concept in a small working example", "You can only repeat its name", "You avoid writing any code", "You never test it"],
-      answer: 0,
-    },
-    {
-      question: `How should ${topic} connect to the rest of your learning roadmap?`,
-      options: ["Understand its dependencies and how later topics build on it", "Treat it as completely unrelated to other topics", "Skip all earlier topics", "Study only definitions forever"],
-      answer: 0,
-    },
-    {
-      question: `What should you do after completing a ${topic} exercise?`,
-      options: ["Review the result, identify mistakes, and improve the solution", "Delete the solution immediately", "Never run it again", "Ignore unexpected output"],
-      answer: 0,
-    },
-  ]
+    { question: `What is the main purpose of ${topic}?`, options: [`To understand and apply its core concepts`, "To remove all application logic", "To replace every other technology", "To avoid writing code"], answer: 0 },
+    { question: `Which approach is best when learning ${topic}?`, options: ["Learn the concept, study examples, and practice", "Memorize without practice", "Skip fundamentals", "Only watch videos without trying examples"], answer: 0 },
+    { question: `Where is ${topic} most useful in a ${skill} project?`, options: ["In the part of the application where the concept solves a real requirement", "Only in the README", "Only after deleting the source code", "Nowhere in a real project"], answer: 0 },
+    { question: `Which habit improves your problem-solving ability in ${topic}?`, options: ["Build small examples and analyse mistakes", "Avoid testing", "Copy every solution without understanding", "Never review errors"], answer: 0 },
+    { question: `Before using an advanced feature of ${topic}, what should you know?`, options: ["The basic syntax, purpose, and common use cases", "Only the feature name", "Nothing at all", "Only deployment commands"], answer: 0 },
+    { question: `What is a good way to check whether you understood ${topic}?`, options: ["Explain it, write a small example, and solve a problem", "Read the title once", "Skip all exercises", "Depend only on memorisation"], answer: 0 },
+    { question: `When debugging a problem related to ${topic}, what is a sensible first step?`, options: ["Reproduce the issue and inspect the relevant input, code, or output", "Randomly change many files", "Delete the project", "Ignore the error"], answer: 0 },
+    { question: `Which result shows practical learning of ${topic}?`, options: ["You can use the concept in a small working example", "You can only repeat its name", "You avoid writing any code", "You never test it"], answer: 0 },
+    { question: `How should ${topic} connect to the rest of your learning roadmap?`, options: ["Understand its dependencies and how later topics build on it", "Treat it as completely unrelated to other topics", "Skip all earlier topics", "Study only definitions forever"], answer: 0 },
+    { question: `What should you do after completing a ${topic} exercise?`, options: ["Review the result, identify mistakes, and improve the solution", "Delete the solution immediately", "Never run it again", "Ignore unexpected output"], answer: 0 }
+  ];
   for (const q of generated) {
     if (questions.length >= 15) break;
     questions.push(q);
@@ -259,6 +219,10 @@ export default function LearningTopic() {
 
   return (
     <main className="page-shell">
+      <div style={{ marginBottom: 16 }}>
+        <BackButton to={`/roadmap?skill=${encodeURIComponent(skill)}`} />
+      </div>
+
       <div className="page-head">
         <span className="eyebrow">PERSONAL LEARNING</span>
         <h1>{topic}</h1>
@@ -320,13 +284,6 @@ export default function LearningTopic() {
                 Take Final Assessment
               </button>
             )}
-
-            <button
-              className="secondary-btn"
-              onClick={() => navigate(`/roadmap?skill=${encodeURIComponent(skill)}`)}
-            >
-              Back to Roadmap
-            </button>
           </div>
         </section>
       ) : (

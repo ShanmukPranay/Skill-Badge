@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { api, getSessionUser } from "../api";
+import BackButton from "../components/BackButton";
 
 const FALLBACK_ROADMAPS = {
   "Java Full Stack Developer": {
@@ -69,21 +70,15 @@ const FALLBACK_ROADMAPS = {
   }
 };
 
-const ASSESSABLE_SKILLS = new Set([
-  "Docker",
-  "AWS",
-  "System Design"
-]);
+const ASSESSABLE_SKILLS = new Set(["Docker", "AWS", "System Design"]);
 
 const defaultRole = "Java Full Stack Developer";
-
 const CURRENT_SKILL_SCORE = 100;
 
 const normalizeSkill = (value) => String(value || "").trim().toLowerCase();
 
 function isCurrentSkill(currentSkills, skill) {
   const target = normalizeSkill(skill);
-
   return currentSkills.some((item) => {
     const current = normalizeSkill(item);
     return current === target || current.includes(target) || target.includes(current);
@@ -131,9 +126,7 @@ export default function Roadmap() {
   const skills = useMemo(() => roadmap || {}, [roadmap]);
 
   useEffect(() => {
-    if (!roadmap) {
-      return;
-    }
+    if (!roadmap) return;
 
     async function loadUserData() {
       const skillNames = Object.keys(roadmap);
@@ -143,9 +136,7 @@ export default function Roadmap() {
         skillNames.map(async (skill) => {
           try {
             const result = await api.latestAssessment(user.id, skill);
-            if (result) {
-              latestResults[skill] = result;
-            }
+            if (result) latestResults[skill] = result;
           } catch {
             // A skill may not have a diagnostic yet.
           }
@@ -183,6 +174,10 @@ export default function Roadmap() {
 
   return (
     <main className="page-shell">
+      <div style={{ marginBottom: 16 }}>
+        <BackButton to="/learning-choice" />
+      </div>
+
       <div className="page-head">
         <span className="eyebrow">PERSONAL LEARNING</span>
         <h1>Your Personalized Roadmap</h1>
@@ -196,12 +191,8 @@ export default function Roadmap() {
         {Object.entries(skills).map(([skill, topics]) => {
           const result = results[skill];
           const canAssess = ASSESSABLE_SKILLS.has(skill);
-          const current = isCurrentSkill(currentSkills, skill)
-            ? CURRENT_SKILL_SCORE
-            : 0;
-          const learningEntries = topics.map((topic) =>
-            getTopicProgress(skill, topic)
-          );
+          const current = isCurrentSkill(currentSkills, skill) ? CURRENT_SKILL_SCORE : 0;
+          const learningEntries = topics.map((topic) => getTopicProgress(skill, topic));
           const learningProgress = learningEntries.length
             ? Math.round(
                 learningEntries.reduce((sum, value) => sum + value, 0) /
@@ -304,6 +295,10 @@ export default function Roadmap() {
             </section>
           );
         })}
+      </div>
+
+      <div style={{ marginTop: 32, display: "flex", justifyContent: "flex-start" }}>
+        <BackButton to="/learning-choice" />
       </div>
     </main>
   );

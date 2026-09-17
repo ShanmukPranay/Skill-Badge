@@ -1,4 +1,5 @@
-import { useState } from "react";
+﻿import { useState } from "react";
+import BackButton from "../components/BackButton";
 
 export default function Chat() {
   const [message, setMessage] = useState("");
@@ -35,6 +36,17 @@ export default function Chat() {
   return (
     <div className="chat-page">
       <div className="chat-container">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 16
+          }}
+        >
+          <BackButton />
+        </div>
+
         <span className="section-label">PEER CHAT</span>
 
         <h1>Chat with your peer</h1>

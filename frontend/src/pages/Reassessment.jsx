@@ -1,5 +1,6 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 const questions = [
   {
@@ -38,6 +39,10 @@ export default function Reassessment() {
   return (
     <div className="reassessment-page">
       <div className="reassessment-container">
+        <div style={{ marginBottom: 16 }}>
+          <BackButton to="/progress" />
+        </div>
+
         <span className="section-label">SKILL REASSESSMENT</span>
 
         <h1>Measure Your Improvement</h1>
@@ -70,18 +75,30 @@ export default function Reassessment() {
             </label>
           ))}
 
-          {current < questions.length - 1 ? (
-            <button
-              className="primary-btn"
-              onClick={() => setCurrent(current + 1)}
-            >
-              Next →
-            </button>
-          ) : (
-            <button className="primary-btn" onClick={submit}>
-              Submit Reassessment
-            </button>
-          )}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 16,
+              marginTop: 24
+            }}
+          >
+            <BackButton to="/progress" />
+
+            {current < questions.length - 1 ? (
+              <button
+                className="primary-btn"
+                onClick={() => setCurrent(current + 1)}
+              >
+                Next →
+              </button>
+            ) : (
+              <button className="primary-btn" onClick={submit}>
+                Submit Reassessment
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
